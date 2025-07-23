@@ -34,9 +34,13 @@ def main_menu_skills():
             input("Presione Enter para continuar...")
             return main_menu_skills()
         case 2:
-            pass
+            list_skills()
+            input("Presione Enter para continuar...")
+            return main_menu_skills()
         case 3:
-            pass
+            delete_skill()
+            input("Presione Enter para continuar...")
+            return main_menu_skills()
         case 4:
             menu.main_menu()
         case _:
@@ -72,6 +76,10 @@ def add_skill():
 
 def edit_skill():
 
+    if (not models.skills):
+        print("No hay skills creadas todavía.")
+        return
+
     print('--Selecione que quiere editar de skill--')
     print('1. nombre')
     print('2. nota de proyecto')
@@ -88,7 +96,8 @@ def edit_skill():
             models.skills['nombre'] += n
             print('Cambio de nombre completado')
             input('Presione Enter para continuar...')
-            return main_menu_skills
+            return main_menu_skills()
+        
         elif (opcion == 2):
 
             p = float(input('nota: '))
@@ -96,7 +105,7 @@ def edit_skill():
             print('Cambio de nota de proyecto completado')
             print(models.skills['proyectos']['nota'])
             input('Presione Enter para continuar')
-            return main_menu_skills
+            return main_menu_skills()
         
         elif (opcion == 3):
             e = float(input('nota: '))
@@ -104,12 +113,12 @@ def edit_skill():
             print('Cambio de nota de examen completado')
             print(models.skills['examenes']['nota'])
             input('Presione Enter para continuar')
-            return main_menu_skills
+            return main_menu_skills()
 
         else:
             print('Opcion no existe')
             input('Presione Enter para continuar')
-            return edit_skill
+            return edit_skill()
 
     except ValueError:
         print('Ingrese un valor valido')
@@ -117,6 +126,42 @@ def edit_skill():
         return edit_skill()
     
 def delete_skill():
-    print('--que skill quiere eliminar?--')
-    print('Opciones disponibles')
-    print(models.skills['nombre'])
+ 
+    list_skills() 
+    
+    if not models.skills:
+        input("Presione Enter para continuar...")
+        return 
+
+    id = input("\n Ingrese el ID de la skill que desea eliminar: ")
+    
+
+    if (id in models.skills):
+       
+        skill_eliminada = models.skills[id]['nombre']
+        confirmacion = input(f"¿Está seguro de que desea eliminar la skill Y(yes)/N(no)'{skill_eliminada}'? (y/n): ").lower()
+        if confirmacion == 'y':
+            del models.skills[id]
+            print("Skill eliminada exitosamente.")
+        else:
+            print("Operación cancelada.")
+            return main_menu_skills()
+    else:
+        print("Error: El ID ingresado no existe.")
+
+
+
+def list_skills():
+
+    os.system('cls' if os.name == 'nt' else 'clear')
+    print("--- Listado de Skills ---")
+    
+    if (not models.skills):
+        print("No hay skills creadas todavía.")
+        return
+
+    
+    for id, skill_data in models.skills.items():
+        print(f"ID: {id} - Nombre: {skill_data['nombre']}")
+
+
